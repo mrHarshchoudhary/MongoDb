@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+          body {
+              font-family: Arial, sans-serif;
+          }
+  
+          h1, h2 {
+              color: #333;
+          }
+  
+          code {
+              display: block;
+              background-color: #f4f4f4;
+              border: 1px solid #ddd;
+              padding: 10px;
+              margin: 10px 0;
+              overflow-x: auto;
+              font-size: 1em;
+          }
+  
+          pre {
+              white-space: pre-wrap; 
+              word-wrap: break-word;
+          }
+      </style>
+    </head>
+
+    <body>
+        <h1>Harsh choudhary - IT6A - 2203031080132</h1>
+        <h2>Assiement 1 - MongoDb</h2>
+
+        <ol>
+            <li>
+              <p>Find all movies where:</p>
+                <ol type="a">
+                    <li>
+                      <p>Runtime is greater than 150 minutes</p>
+                       <pre> <code>db.movies.find({runtime:{$gt:150}},{title:true,_id:0})
+                        </code></pre>
+                    </li>
+                    <li>
+                      <p>Rating is higher than 8.5</p>
+                        <pre><code>db.movies.find({rating:{$gt:8.5}},{title:true,_id:0})</code></pre>
+                    </li>
+                    <li>
+                      <p>Year is between 2000 and 2015 (inclusive)</p>
+                        <pre><code>db.movies.find({year:{$gt:2000,$lt:2015}},{title:true,_id:0})
+                        </code></pre>
+                    </li>
+                    <li>
+                      <p>Box office earnings were less than 500 million OR greater than 1 billion</p>
+                        <pre><code> db.movies.find({boxOffice:{$gt:500,$lt:1000}},{title:true,_id:0})
+                        </code></pre>
+                    </li>
+                </ol>
+            </li>
+            <li>
+              <p>Find movies directed by Christopher Nolan that won an Oscar, made more than 700 million at box office, and are available on Netflix.</p>
+                <pre><code>db.movies.find({director:"Christopher Nolan",isOscarWinner:true,boxOffice:{$gt:700},streamingOn:{$in:["Netflix"]}},{title:true,_id:0})
+                  
+                </code></pre>
+            </li>
+            <li>
+              <p>Find movies that have special features, where both behind-the-scenes content and deleted scen</p>
+                <pre><code>db.movies.find({"specialFeatures.behindTheScenes":true,"specialFeatures.deletedScenes":true},{title:true,_id:false})
+                </code></pre>
+            </li>
+            <li>
+              <p>Find movies where either Carrie-Anne Moss or Morgan Freeman is in the cast, have language options available, and can be watched on at least 2 streaming platforms.
+
+              </p>
+                <pre><code>db.movies.find({cast:{$in:["Carrie-Anne Moss","Morgan Freeman"]},languages:{$exists:true,$not:{$size:0}},streamingOn:{$exists:true,$not:{$size:1}}},{title:1,_id:0})
+                </code></pre>
+            </li>
+            <li>
+              <p>For the movie "Inception", add Chinese to its languages.</p>
+              <pre><code>db.movies.updateOne({title:"Inception"},{$push:{language:"Chinese"}})</code></pre></li>
+
+            <li>
+              <p>Add Michael Caine to the cast of all Christopher Nolan movies.</p>
+              <pre><code> db.movies.updateMany({director:"Christopher Nolan"},{$addToSet:{cast:"Michael Caine"}})
+            </code></li>
+            <li>
+              <p>Add Disney+ as a streaming option for all movies longer than 140 minutes.</p>
+              <pre></pre><code>db.movies.updateMany({runtime:{$gt:140}},{$addToSet:{streamingOn:"Disney+"}})
+            </code></pre></li>
+            <li>
+              <p>Find movies that have exactly 2 genres and have box office earnings listed, but don't have any special features.</p>
+             <pre> <code>db.movies.find({$and:[{genre:{$size:2}},{boxOffice:{$exists:true}},{specialFeatures:{$exists:false}}]})</code></pre></li>
+
+            <li>
+              <p>Remove all movies with rating less than 8.0.</p>
+              <pre><code>db.movies.deleteMany({ rating: { $lt: 8.0}});</code></pre></li>
+            <li>
+              <p>Remove Netflix from the streaming platforms of all movies released before 2000.</p>
+             <pre> <code>db.movies.updateMany({ year: { $lt: 2000 }, streamingOn: "Netflix" }, { $pull: { streamingOn:"Netflix"}});</code></pre></li>
+            <li>
+              <p>Find movies where box office earnings are more than 10 times the runtime.
+
+              </p>
+             <pre> <code>db.movies.find({$expr:{ $gt: ["$boxOffice", { $multiply: ["$runtime",10]}]}})
+            </code></pre></li>
+            <li>
+              <p>Find movies that have both "Action" and "Sci-Fi" in their genres.</p>
+             <pre><code>db.movies.find({ genre: { $all: ["Action", "Sci-Fi"]}});</code></pre> </li>
+            <li>
+              <p>Find movies where "Action" is the first genre listed.</p>
+              <pre><code> db.movies.find({ genre: { $all: ["Action", "Sci-Fi"]}});</code></pre></li>
+            <li>
+              <p>Find movies that have exactly 3 cast members.</p>
+              <pre><code>db.movies.find({cast:{$size:3}});</code></pre></li>
+        </ol>
+
+    </body>
+
+</html>
